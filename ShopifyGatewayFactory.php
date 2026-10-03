@@ -5,7 +5,10 @@ namespace Omnitrade\Shopify;
 use Omnitrade\Config;
 use Omnitrade\Exception\InvalidConfigException;
 use Omnitrade\GatewayFactory;
+use Omnitrade\Shopify\Action\FetchInventoryAction;
 use Omnitrade\Shopify\Action\FetchOrderAction;
+use Omnitrade\Shopify\Action\FetchProductAction;
+use Omnitrade\Shopify\Action\FetchProductsAction;
 use Omnitrade\Shopify\Action\FetchTransactionAction;
 use Omnitrade\Shopify\Action\NotifyAction;
 use Omnitrade\Shopify\Action\PurchaseAction;
@@ -14,7 +17,8 @@ use Symfony\Component\HttpClient\HttpClient;
 
 /**
  * Shopify, a commerce platform: a sale paid on the shop's invoice page (a
- * draft order), the shop's orders, and its webhooks.
+ * draft order), the shop's orders, its catalogue (products, variants,
+ * inventory) and its webhooks.
  *
  *   options:
  *     shop_domain: '%env(SHOPIFY_SHOP_DOMAIN)%'        # example.myshopify.com
@@ -24,6 +28,7 @@ use Symfony\Component\HttpClient\HttpClient;
  *     api_version: '2026-07'
  *     timeout: 15
  *     draft_order_tags: []                             # tags put on the draft orders it creates
+ *     currency: null                                   # the catalogue's prices' currency; null: the shop's
  *
  * No authorizations, captures nor refunds from here: Shopify's own admin does
  * those on its orders.
@@ -41,6 +46,7 @@ final class ShopifyGatewayFactory extends GatewayFactory
             'api_version' => '2026-07',
             'timeout' => 15,
             'draft_order_tags' => [],
+            'currency' => null,
             'omnitrade.api' => function (Config $c) {
                 if (!$this->http) {
                     if (!class_exists(HttpClient::class)) {
@@ -56,7 +62,10 @@ final class ShopifyGatewayFactory extends GatewayFactory
             'omnitrade.action.purchase' => new PurchaseAction(),
             'omnitrade.action.fetch' => new FetchTransactionAction(),
             'omnitrade.action.order' => new FetchOrderAction(),
-            'omnitrade.action.notify' => new NotifyAction(),
+            'omnitrade.action.notify' => static fn (Config $c) => new NotifyAction($c['currency'] ?: null),
+            'omnitrade.action.products' => static fn (Config $c) => new FetchProductsAction($c['currency'] ?: null),
+            'omnitrade.action.product' => static fn (Config $c) => new FetchProductAction($c['currency'] ?: null),
+            'omnitrade.action.inventory' => new FetchInventoryAction(),
         ]);
     }
 }

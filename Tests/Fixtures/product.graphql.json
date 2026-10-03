@@ -1,0 +1,29 @@
+{
+  "id": "gid://shopify/Product/8472913847",
+  "handle": "enamel-mug",
+  "title": "Enamel Mug",
+  "descriptionHtml": "<p>Holds coffee. Survives being dropped.</p>",
+  "status": "ACTIVE",
+  "tags": ["kitchen", "gift"],
+  "updatedAt": "2026-09-14T09:12:00Z",
+  "featuredMedia": {
+    "id": "gid://shopify/MediaImage/551",
+    "image": { "url": "https://cdn.shopify.com/s/files/mug.jpg", "altText": "An enamel mug" }
+  },
+  "variants": {
+    "nodes": [
+      {
+        "id": "gid://shopify/ProductVariant/44821390",
+        "title": "Default Title",
+        "sku": "MUG-001",
+        "barcode": "5012345678900",
+        "availableForSale": true,
+        "inventoryQuantity": 17,
+        "price": "12.50",
+        "compareAtPrice": "15.00",
+        "image": null,
+        "inventoryItem": { "id": "gid://shopify/InventoryItem/99001", "tracked": true }
+      }
+    ]
+  }
+}

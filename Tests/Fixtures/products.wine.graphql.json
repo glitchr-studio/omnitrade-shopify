@@ -1,0 +1,53 @@
+{
+  "id": "gid://shopify/Product/9001",
+  "handle": "margaux-chateau-exemple",
+  "title": "Margaux",
+  "descriptionHtml": "<p>Un margaux de garde.</p>",
+  "vendor": "Château Exemple",
+  "productType": "Vin rouge",
+  "status": "ACTIVE",
+  "tags": ["bordeaux", "garde"],
+  "updatedAt": "2026-10-02T08:30:00Z",
+  "onlineStoreUrl": "https://cave.example/products/margaux-chateau-exemple",
+  "options": [
+    { "name": "Millésime", "optionValues": [ { "name": "2019" }, { "name": "2018" } ] }
+  ],
+  "collections": { "nodes": [ { "title": "Bordeaux" }, { "title": "Vin rouge" } ] },
+  "metafields": { "nodes": [
+    { "namespace": "custom", "key": "appellation", "value": "Margaux AOC" },
+    { "namespace": "custom", "key": "cepage", "value": "Cabernet sauvignon" }
+  ] },
+  "media": { "nodes": [
+    { "id": "gid://shopify/MediaImage/1", "alt": "La bouteille", "mediaContentType": "IMAGE", "image": { "url": "https://cdn.shopify.com/s/files/margaux.jpg", "width": 800, "height": 1200 } },
+    { "id": "gid://shopify/Video/2", "alt": null, "mediaContentType": "VIDEO", "sources": [ { "url": "https://cdn.shopify.com/videos/chai.mp4", "width": 1920, "height": 1080 } ] },
+    { "id": "gid://shopify/Model3d/3", "alt": null, "mediaContentType": "MODEL_3D" }
+  ] },
+  "variants": { "nodes": [
+    {
+      "id": "gid://shopify/ProductVariant/71",
+      "title": "2019",
+      "sku": "MGX19",
+      "barcode": "",
+      "availableForSale": false,
+      "inventoryQuantity": 0,
+      "price": "29.00",
+      "compareAtPrice": null,
+      "selectedOptions": [ { "name": "Millésime", "value": "2019" } ],
+      "image": null,
+      "inventoryItem": { "id": "gid://shopify/InventoryItem/81", "tracked": true, "measurement": { "weight": { "unit": "KILOGRAMS", "value": 1.3 } } }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/72",
+      "title": "2018",
+      "sku": "MGX18",
+      "barcode": "3760000000018",
+      "availableForSale": true,
+      "inventoryQuantity": 12,
+      "price": "24.00",
+      "compareAtPrice": "27.50",
+      "selectedOptions": [ { "name": "Millésime", "value": "2018" } ],
+      "image": { "url": "https://cdn.shopify.com/s/files/margaux-2018.jpg", "altText": "2018", "width": 400, "height": 600 },
+      "inventoryItem": { "id": "gid://shopify/InventoryItem/82", "tracked": true, "measurement": { "weight": { "unit": "GRAMS", "value": 1300 } } }
+    }
+  ] }
+}

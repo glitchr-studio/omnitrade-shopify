@@ -1,0 +1,27 @@
+{
+  "id": 8472913847,
+  "title": "Enamel Mug",
+  "body_html": "<p>Holds coffee. Survives being dropped.</p>",
+  "handle": "enamel-mug",
+  "status": "active",
+  "tags": "kitchen, gift",
+  "updated_at": "2026-09-14T09:12:00Z",
+  "admin_graphql_api_id": "gid://shopify/Product/8472913847",
+  "image": { "id": 551, "src": "https://cdn.shopify.com/s/files/mug.jpg" },
+  "images": [ { "id": 551, "src": "https://cdn.shopify.com/s/files/mug.jpg" } ],
+  "variants": [
+    {
+      "id": 44821390,
+      "product_id": 8472913847,
+      "title": "Default Title",
+      "sku": "MUG-001",
+      "barcode": "5012345678900",
+      "price": "12.50",
+      "compare_at_price": "15.00",
+      "inventory_management": "shopify",
+      "inventory_quantity": 17,
+      "inventory_item_id": 99001,
+      "image_id": 551
+    }
+  ]
+}

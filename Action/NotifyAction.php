@@ -9,18 +9,28 @@ use Omnitrade\Exception\InvalidNotificationException;
 use Omnitrade\Exception\ProviderException;
 use Omnitrade\Model\Notification;
 use Omnitrade\Model\Status;
+use Omnitrade\Model\Stock;
 use Omnitrade\Request\Notify;
 use Omnitrade\Request\Request;
 use Omnitrade\Shopify\Api;
 use Omnitrade\Shopify\Api\Endpoint;
 use Omnitrade\Shopify\Api\Hmac;
 use Omnitrade\Shopify\Documents;
+use Omnitrade\Shopify\Products;
 
 /**
  * A Shopify webhook, its HMAC and its shop checked. The order topics read as
  * what they mean: orders/paid is PAID, orders/cancelled CANCELLED,
- * refunds/create REFUNDED; the rest (fulfilments, products) is handed back
- * with no status, for the application to read from $raw.
+ * refunds/create REFUNDED; the rest (fulfilments...) is handed back with no
+ * status, for the application to read from $raw.
+ *
+ * The catalogue topics carry the catalogue: products/create and
+ * products/update the Product (the REST payload read like a GraphQL node),
+ * products/delete its gid alone (no product: it is gone), and
+ * inventory_levels/update one Stock - the level at one location, which
+ * names the inventory item rather than the variant: Stock::$reference and
+ * $item are then the InventoryItem's gid, to match on the variant's
+ * Stock::$item.
  *
  * The reference is the draft order the sale began with (the transaction's
  * reference) when the order names one, else the order's own gid; the
@@ -31,7 +41,10 @@ final class NotifyAction implements ActionInterface, ApiAwareInterface
     /** @use ApiAwareTrait<Api> */
     use ApiAwareTrait;
 
-    public function __construct()
+    private ?array $shop = null;
+
+    /** @param string|null $currency the prices' currency; null: the shop's, asked once */
+    public function __construct(private readonly ?string $currency = null)
     {
         $this->apiClass = Api::class;
     }
@@ -82,6 +95,21 @@ final class NotifyAction implements ActionInterface, ApiAwareInterface
             }
         }
 
+        $product = null;
+        $stocks = [];
+        if ('products/create' === $topic || 'products/update' === $topic) {
+            [$currency, $taxIncluded] = $this->currency();
+            $product = Products::fromRest($payload, $currency, $taxIncluded);
+            $reference = $product->reference;
+        } elseif ('products/delete' === $topic && isset($payload['id'])) {
+            $reference = Endpoint::gid('Product', (string) $payload['id']);
+        } elseif ('inventory_levels/update' === $topic && isset($payload['inventory_item_id'])) {
+            $item = Endpoint::gid('InventoryItem', (string) $payload['inventory_item_id']);
+            $reference = $item;
+            $available = \array_key_exists('available', $payload) && null !== $payload['available'] ? (int) $payload['available'] : null;
+            $stocks = [new Stock($item, $available, null !== $available, location: isset($payload['location_id']) ? Endpoint::gid('Location', (string) $payload['location_id']) : null, item: $item)];
+        }
+
         $request->setResult(new Notification(
             provider: 'shopify',
             event: $topic,
@@ -89,6 +117,19 @@ final class NotifyAction implements ActionInterface, ApiAwareInterface
             status: $status,
             id: $request->header('X-Shopify-Webhook-Id'),
             raw: ['topic' => $topic, 'shop' => $shop, 'merchant_reference' => $merchantReference, 'order' => $payload['admin_graphql_api_id'] ?? null, 'payload' => $payload],
+            product: $product,
+            stocks: $stocks,
         ));
+    }
+
+    /** @return array{0: string, 1: ?bool} the prices' currency, and whether taxes are in them */
+    private function currency(): array
+    {
+        if (null !== $this->currency && '' !== $this->currency) {
+            return [$this->currency, null];
+        }
+        $this->shop ??= $this->api->admin->query(Documents::SHOP)['shop'] ?? [];
+
+        return [(string) ($this->shop['currencyCode'] ?? 'EUR'), isset($this->shop['taxesIncluded']) ? (bool) $this->shop['taxesIncluded'] : null];
     }
 }

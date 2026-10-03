@@ -1,7 +1,7 @@
 {
     "name": "omnitrade/shopify",
     "type": "library",
-    "description": "Omnitrade Shopify: a sale paid on the shop's invoice page (draft orders), the shop's orders and its webhooks, over the Admin GraphQL API.",
+    "description": "Omnitrade Shopify: a sale paid on the shop's invoice page (draft orders), the shop's orders, its catalogue (products, variants, inventory) and its webhooks, over the Admin GraphQL API.",
     "keywords": ["shopify", "commerce", "omnitrade"],
     "license": "LGPL-3.0-or-later",
     "authors": [{"name": "Marco Meyer", "email": "marco.meyer@glitchr.io"}],
