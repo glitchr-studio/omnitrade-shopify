@@ -4,6 +4,13 @@ Shopify for [glitchr/omnitrade](https://github.com/glitchr-studio/omnitrade): a 
 shop's invoice page (a draft order with your prices), the shop's orders, its catalogue, and its webhooks - over
 the Admin GraphQL API, its cost bucket respected.
 
+```php
+$gateway = (new ShopifyGatewayFactory($http))->create(['shop_domain' => 'example.myshopify.com', 'admin_token' => '...']);   // $http: the application's HTTP client; none given, the factory makes its own
+```
+
+No framework needed: the package requires `glitchr/omnitrade` and `symfony/http-client`. In a
+Symfony application, the same through the bundle's configuration:
+
 ```yaml
 omnitrade:
     gateways:

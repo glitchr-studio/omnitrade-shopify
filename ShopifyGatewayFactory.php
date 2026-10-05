@@ -3,7 +3,6 @@
 namespace Omnitrade\Shopify;
 
 use Omnitrade\Config;
-use Omnitrade\Exception\InvalidConfigException;
 use Omnitrade\GatewayFactory;
 use Omnitrade\Shopify\Action\FetchInventoryAction;
 use Omnitrade\Shopify\Action\FetchOrderAction;
@@ -48,14 +47,7 @@ final class ShopifyGatewayFactory extends GatewayFactory
             'draft_order_tags' => [],
             'currency' => null,
             'omnitrade.api' => function (Config $c) {
-                if (!$this->http) {
-                    if (!class_exists(HttpClient::class)) {
-                        throw new InvalidConfigException('The "shopify" gateway needs symfony/http-client.');
-                    }
-                    $http = HttpClient::create();
-                } else {
-                    $http = $this->http;
-                }
+                $http = $this->http ?? HttpClient::create();
 
                 return new Api(new Endpoint($c['shop_domain'], $c['api_version'], $c['admin_token'], $c['storefront_token'], $c['webhook_secret'], (int) $c['timeout']), $http, (array) $c['draft_order_tags']);
             },
