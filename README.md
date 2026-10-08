@@ -46,4 +46,4 @@ Credentials: a custom app in the shop's admin (Settings → Apps → Develop app
 `write_draft_orders`, `read_orders` scopes, its Admin API access token, and the app's API
 secret for the webhooks (`orders/paid`, `orders/cancelled`, `refunds/create` to your endpoint).
 
-License: LGPL-3.0-or-later.
+License: MIT since 2026-10-09; earlier versions remain published under LGPL-3.0-or-later.
